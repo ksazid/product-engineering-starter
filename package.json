@@ -19,6 +19,7 @@
     "security:classify": "node scripts/security-classify.mjs",
     "knowledge:export": "node scripts/knowledge-export.mjs",
     "optimize:context": "node scripts/optimize-context.mjs",
+    "memory:doctor": "node scripts/memory-doctor.mjs",
     "preflight": "npm run planning:validate && node --check scripts/*.mjs",
     "certify": "npm run preflight",
     "engineering:advise": "node scripts/advisor.mjs",
