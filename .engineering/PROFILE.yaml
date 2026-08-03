@@ -4,7 +4,7 @@ mode: lite
 
 available_modes:
   lite:
-    description: PRD/TRD intake, planning, vertical slices, deterministic preflight, human review, and optional knowledge/memory/brevity integrations.
+    description: PRD/TRD intake, planning, vertical slices, deterministic preflight, human review, and optional knowledge/memory/brevity/deployment guidance.
     capabilities:
       - planning
       - slices
@@ -13,6 +13,7 @@ available_modes:
       - optional-notebooklm-export
       - optional-mempalace-memory
       - optional-caveman-lite
+      - optional-deployment-cost-advisor
   standard:
     description: Lite plus ADR governance, evidence bundles, threat modelling and release certification.
     capabilities:
@@ -23,6 +24,7 @@ available_modes:
       - optional-notebooklm-export
       - optional-mempalace-memory
       - optional-caveman-lite
+      - optional-deployment-cost-advisor
       - adrs
       - evidence
       - threat-model
@@ -37,6 +39,7 @@ available_modes:
       - optional-notebooklm-export
       - optional-mempalace-memory
       - optional-caveman-lite
+      - optional-deployment-cost-advisor
       - adrs
       - evidence
       - threat-model
@@ -57,6 +60,11 @@ plugins:
     - mempalace-memory
     - caveman-lite
     - caveman-context-compress
+    - deployment-cost-advisor
+    - deploy-cloudflare
+    - deploy-netlify
+    - deploy-vercel
+    - deploy-render
     - codex-security
     - maker-checker
     - worktrees
@@ -71,8 +79,12 @@ policy:
   auto_enable_recommendations: false
   require_human_approval_for_mode_change: true
   require_human_approval_for_context_compression: true
+  require_human_approval_for_deployment_provider: true
+  require_human_approval_for_production_deployment: true
   notebooklm_is_non_authoritative: true
   mempalace_is_non_authoritative: true
   mempalace_default_storage: local
   caveman_default_level: lite
+  deployment_advisor_is_recommendation_only: true
+  deployment_provider_default: none
   recommend_only_when_threshold_met: true
