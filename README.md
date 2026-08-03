@@ -45,7 +45,7 @@ Superpowers does not replace the approved PRD, TRD, ADRs, security decisions, de
 - .NET SDK 10.x
 - Docker with Compose v2
 - A supported coding-agent harness for Superpowers
-- Optional: GitHub CLI, PostgreSQL client, Python 3.10+, Codex Security, NotebookLM, and Caveman
+- Optional: GitHub CLI, PostgreSQL client, Python 3.9+, Codex Security, NotebookLM, MemPalace, and Caveman
 
 ## Install PES
 
@@ -123,6 +123,7 @@ PRD + TRD
 → human plan approval
 → activate one vertical slice
 → focused slice context
+→ optional MemPalace retrieval verified against current Git
 → Superpowers plan, worktree, TDD, implementation, and review
 → deterministic preflight
 → risk-triggered security review
@@ -167,7 +168,7 @@ PES starts in **Lite** mode.
 - **Standard:** adds ADRs, threat modelling, evidence bundles, Superpowers worktrees/reviews, and release certification.
 - **Enterprise:** adds budgeted subagent-driven development, independent security review, and risk-triggered Codex Security.
 
-NotebookLM and Caveman Lite are optional in every mode and disabled by default. They do not change the mode or authority model.
+NotebookLM, MemPalace, and Caveman Lite are optional in every mode and disabled by default. They do not change the mode or authority model.
 
 ```bash
 npm run profile:show
@@ -184,38 +185,36 @@ Create a curated bundle:
 npm run knowledge:export
 ```
 
-This writes:
+This writes a reviewed bundle under `dist/knowledge/` with source hashes, repository commit SHA, and export time. Full guidance: `docs/integrations/NOTEBOOKLM.md`.
 
-```text
-dist/knowledge/
-├── START-HERE.md
-├── SOURCE-MANIFEST.json
-└── curated repository documents
+## Optional AI memory: MemPalace
+
+MemPalace is a local-first memory layer for large requirements and long-running projects. It can index selected project documents and prior conversations verbatim, then retrieve only the context relevant to the active slice.
+
+Git remains authoritative. Retrieved memories must be checked against current repository files before entering a context pack.
+
+Recommended local installation:
+
+```bash
+uv tool install mempalace
+npm run memory:doctor
+mempalace init .
 ```
 
-The manifest records the source paths, SHA-256 hashes, repository commit SHA, and export time. Review the bundle before uploading it to a shared NotebookLM notebook.
+Example usage:
 
-Recommended notebook name:
-
-```text
-Product Engineering Starter — Team Guide
+```bash
+mempalace mine product/
+mempalace mine docs/
+mempalace search "why was this architecture decision made"
+mempalace wake-up
 ```
 
-Never export secrets, credentials, private customer data, production logs, or restricted security findings. Full guidance: `docs/integrations/NOTEBOOKLM.md`.
+The default embedded storage is recommended because it avoids a hosted vector-database bill. Never index secrets, credentials, production dumps, regulated personal data, or restricted security findings by default. Full guidance: `docs/integrations/MEMPALACE.md`.
 
 ## Optional brevity and context optimization: Caveman
 
 Caveman is an optional plugin for shorter agent communication and guarded context compression. PES recommends **lite** mode only.
-
-Good uses:
-
-- status summaries
-- CI triage
-- commit messages
-- concise PR review comments
-- routine run summaries
-
-Do not use Caveman brevity for PRD/TRD analysis, ADR rationale, security findings, acceptance criteria, detailed implementation plans, certification, or release evidence.
 
 Install Caveman separately for the coding-agent harness. A common skills-registry command is:
 
@@ -229,25 +228,19 @@ Preview context optimization:
 npm run optimize:context
 ```
 
-The preview changes nothing. After installing `caveman-compress` and receiving human approval:
+Apply only after human approval:
 
 ```bash
 PES_CONTEXT_COMPRESSION_APPROVED=1 npm run optimize:context -- --apply
 ```
 
-The wrapper:
-
-- compresses only an explicit allowlist of internal instruction files
-- creates timestamped backups under `.engineering/backups/context/`
-- stops on any failed compression
-- requires diff review and `npm run preflight`
-
-It never compresses PRDs, TRDs, ADRs, security policies, API contracts, release evidence, README files, source code, tests, or migrations. Full guidance: `docs/integrations/CAVEMAN.md`.
+The wrapper uses an explicit allowlist, creates backups, and excludes authoritative or public documents. Full guidance: `docs/integrations/CAVEMAN.md`.
 
 ## Cost controls
 
 - deterministic validation before model-backed review
 - focused slice context instead of full-repository context
+- MemPalace local retrieval for large, recurring context when enabled
 - coherent implementation steps
 - single-agent execution for low-risk work
 - subagents only when risk justifies their cost
@@ -323,6 +316,7 @@ npm run slice:validate
 npm run security:classify -- <changed-files>
 npm run delivery:status
 npm run knowledge:export
+npm run memory:doctor
 npm run optimize:context
 npm run preflight
 npm run certify
@@ -332,10 +326,10 @@ npm run profile:show
 
 ## Large requirements
 
-Parse the full product once, plan broadly at release and milestone level, detail only the next milestone, and execute only the active slice. Generate focused context packs under `delivery/context/<slice-id>/`.
+Parse the full product once, plan broadly at release and milestone level, detail only the next milestone, and execute only the active slice. Generate focused context packs under `delivery/context/<slice-id>/`. MemPalace may retrieve relevant historical context, but every retrieved item must be validated against current Git sources.
 
 ```text
-Product → Release → Milestone → Epic → Vertical Slice → Superpowers Plan → Task
+Product → Release → Milestone → Epic → Vertical Slice → Context Retrieval → Superpowers Plan → Task
 ```
 
 ## GitHub setup
@@ -351,7 +345,7 @@ Product → Release → Milestone → Epic → Vertical Slice → Superpowers Pl
 
 No microservice generation, Kubernetes default, event sourcing default, generic repositories, uncontrolled agent swarms, autonomous merge, autonomous production deployment, custom project-management UI, or mandatory Ruflo dependency.
 
-Superpowers is the default execution methodology. NotebookLM and Caveman are removable, non-authoritative, optional integrations.
+Superpowers is the default execution methodology. NotebookLM, MemPalace, and Caveman are removable, non-authoritative, optional integrations.
 
 ## License
 
