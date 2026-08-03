@@ -1,3 +1,11 @@
+
+<p align="center">
+<img src="docs/assets/pes-overview.png" alt="Product Engineering Starter Overview" width="100%">
+</p>
+
+
+
+
 # Product Engineering Starter
 
 An open-source governance layer for turning an approved **PRD** and **TRD** into a traceable, secure, cost-controlled web product.
