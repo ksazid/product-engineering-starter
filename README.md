@@ -133,19 +133,35 @@ Repository-local skills live under `.agents/skills/`:
 - CI triage
 - evidence building
 - release verification
+- **Taste Skill (`design-taste-frontend`)** for landing pages, marketing surfaces, portfolios, editorial pages, and explicitly approved redesigns
 
 Load only relevant skills for each task. A normal feature uses `slice-planner`, `implementer`, and `verifier`; a specialist is added only when triggered.
+
+Taste Skill is installed locally at:
+
+```text
+.agents/skills/design-taste-frontend/SKILL.md
+```
+
+To install or update it from the maintained skill repository:
+
+```bash
+npx skills add https://github.com/ksazid/taste-skill --skill "design-taste-frontend"
+```
+
+Taste Skill must not override approved product requirements, design baselines, accessibility rules, or active-slice scope. It is not the primary skill for dashboards, dense data tables, administrative queues, complex forms, or multi-step product workflows.
 
 ## UI workflow
 
 For UI work, use the approved product design baseline first, then project-installed UI skills as relevant:
 
-1. UI UX Pro Max for UX, accessibility, responsive behavior and states.
-2. Impeccable for bounded visual polish.
-3. Emil design engineering for purposeful motion and reduced-motion equivalents.
-4. Ponytail for maintainable minimum-change implementation.
+1. **Taste Skill** for visual direction, layout, typography, spacing, hierarchy, and anti-template discipline on landing, marketing, portfolio, editorial, and approved redesign surfaces.
+2. UI UX Pro Max for UX, accessibility, responsive behavior and states.
+3. Impeccable for bounded visual polish.
+4. Emil design engineering for purposeful motion and reduced-motion equivalents.
+5. Ponytail for maintainable minimum-change implementation.
 
-These external skills are not vendored in this repository.
+Taste Skill is vendored as a project-local integration. The other external UI skills are installed separately when required by a project.
 
 ## Security model
 
