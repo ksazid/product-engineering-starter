@@ -12,6 +12,13 @@
   "frontend": "nextjs",
   "backend": "aspnet-container",
   "database": "postgresql",
+  "databaseRequirements": {
+    "connectionPooling": true,
+    "sameProviderPreferred": false,
+    "dataResidencyRequired": false,
+    "backupsRequired": true,
+    "pointInTimeRecoveryRequired": false
+  },
   "traffic": "low",
   "bandwidth": "low",
   "coldStartsAccepted": true,
@@ -27,5 +34,5 @@
     "requireEndToEndSmokeTest": true,
     "requireRollbackPlan": true
   },
-  "notes": "Choose single-provider, split, or advisor-recommended. A human must approve the final selection before provider configuration or deployment."
+  "notes": "Choose single-provider, split, or advisor-recommended for frontend, API and database. Human approval is required before provider configuration or deployment."
 }
