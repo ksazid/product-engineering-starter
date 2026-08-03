@@ -6,35 +6,47 @@ The starter begins in **Lite mode**. More governance is recommended only when re
 
 Use for MVPs and small teams. Includes intake, planning, vertical slices, Superpowers single-agent execution, deterministic preflight, baseline security and human review.
 
-Lite also supports two optional, disabled-by-default integrations:
+The delivery graph is deliberately unavailable in Lite. Routing, specialist hand-offs, integration and independent review add model calls and coordination overhead that routine low-risk work usually cannot justify.
 
-- **NotebookLM knowledge export** for team onboarding and source-grounded Q&A. GitHub remains authoritative.
-- **Caveman Lite** for concise routine communication, plus guarded manual context compression for selected instruction files.
-
-Enable either only when a team chooses it. Neither is required to use PES.
-
-```bash
-npm run knowledge:export
-npm run optimize:context
-```
-
-`knowledge:export` writes a curated bundle under `dist/knowledge/`. `optimize:context` is preview-only unless `--apply` and the explicit approval environment variable are both supplied.
+Lite supports optional NotebookLM knowledge export, MemPalace local memory, Caveman Lite and deployment-cost guidance. These remain disabled by default.
 
 ## Standard — growing product
 
-Add when the project has a larger backlog, multiple modules or formal release expectations. Adds ADR governance, threat modelling, evidence bundles, Superpowers worktrees/reviews and complete certification.
+Adds ADR governance, threat modelling, evidence bundles, complete certification and an optional **risk-triggered review graph**:
 
-NotebookLM and Caveman remain optional. Context compression never applies automatically during a mode upgrade.
+```text
+router → implementer → deterministic checks → reviewer → human checkpoint
+```
+
+Use it only for medium-risk work where an independent review is likely to prevent meaningful rework. It permits one specialist, one review cycle and no parallel execution by default.
 
 ## Enterprise — high-risk or multi-team product
 
-Add only when scale and risk justify it. Adds independent maker/checker execution, isolated worktrees, agent budgets and risk-triggered Codex Security.
+Adds maker/checker execution, worktrees, budgets, risk-triggered Codex Security and an optional **full delivery graph**:
 
-NotebookLM may support onboarding across teams, but it still has no approval authority. Caveman should remain `lite` for routine summaries and disabled for security, architecture, implementation plans and release evidence.
+```text
+router → selected specialists → integrator → deterministic checks → independent reviewer → human checkpoint
+```
+
+The graph is suitable for authentication, payments, sensitive data, migrations, public API changes, major architecture changes, cross-module work and release candidates. Default limits are three specialists and two review cycles.
+
+## Why graph execution is restricted
+
+A delivery graph increases input context, coordination output and review calls. It is cost-effective only when the expected reduction in defects, missed risk or rework exceeds that extra agent cost.
+
+PES therefore reuses one focused context pack, runs deterministic checks first, skips unchanged nodes by hash, uses one integrator, caps specialists and retries, records usage and stops when the budget is exceeded.
+
+Being in Standard or Enterprise mode does not activate the graph automatically. A reviewed trigger and human approval are required for each active slice.
+
+Check the current configuration with:
+
+```bash
+npm run delivery-graph:check
+```
+
+See `docs/integrations/DELIVERY-GRAPH.md` and `.engineering/DELIVERY-GRAPH.json`.
 
 ## Growth advisor
-
-Run:
 
 ```bash
 npm run engineering:advise
@@ -46,10 +58,8 @@ The advisor reads repository evidence and recommends capabilities. It never chan
 
 A capability must satisfy all of the following before it is enabled:
 
-1. A recurring problem is measured.
+1. A recurring problem or material risk is measured.
 2. The capability addresses that problem directly.
-3. Its expected benefit exceeds its maintenance and agent-credit cost.
+3. Its expected benefit exceeds maintenance and agent-credit cost.
 4. A human approves the change.
 5. The change can be removed without restructuring the product.
-
-For NotebookLM, the team must define refresh ownership and data-sharing boundaries. For Caveman compression, the team must review backups and diffs and verify that policy meaning, commands, paths and identifiers remain intact.
