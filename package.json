@@ -1,0 +1,25 @@
+{
+  "name": "product-engineering-starter",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Governed open-source starter for building secure web products from an approved PRD and TRD.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "product:intake": "node scripts/intake.mjs",
+    "planning:generate": "node scripts/planning.mjs",
+    "planning:validate": "node scripts/validate-json.mjs",
+    "slice:activate": "node scripts/slice.mjs activate",
+    "slice:status": "node scripts/slice.mjs status",
+    "slice:validate": "node scripts/slice.mjs validate",
+    "delivery:status": "node scripts/status.mjs",
+    "security:classify": "node scripts/security-classify.mjs",
+    "preflight": "npm run planning:validate && node --check scripts/*.mjs",
+    "certify": "npm run preflight",
+    "engineering:advise": "node scripts/advisor.mjs",
+    "profile:show": "node scripts/show-profile.mjs"
+  }
+}

@@ -1,0 +1,59 @@
+# Progressive complexity profile.
+# Start with lite. The advisor recommends upgrades when repository evidence justifies them.
+mode: lite
+
+available_modes:
+  lite:
+    description: PRD/TRD intake, planning, vertical slices, deterministic preflight, human review.
+    capabilities:
+      - planning
+      - slices
+      - deterministic-validation
+      - baseline-security
+  standard:
+    description: Lite plus ADR governance, evidence bundles, threat modelling and release certification.
+    capabilities:
+      - planning
+      - slices
+      - deterministic-validation
+      - baseline-security
+      - adrs
+      - evidence
+      - threat-model
+      - certification
+  enterprise:
+    description: Standard plus maker/checker separation, worktrees, budgets and risk-triggered Codex Security.
+    capabilities:
+      - planning
+      - slices
+      - deterministic-validation
+      - baseline-security
+      - adrs
+      - evidence
+      - threat-model
+      - certification
+      - maker-checker
+      - worktrees
+      - agent-budgets
+      - codex-security
+
+plugins:
+  enabled:
+    - planning
+    - security-baseline
+    - web-ui
+  available:
+    - codex-security
+    - maker-checker
+    - worktrees
+    - redis
+    - object-storage
+    - background-jobs
+    - ai-rag
+    - payments
+    - multi-tenancy
+
+policy:
+  auto_enable_recommendations: false
+  require_human_approval_for_mode_change: true
+  recommend_only_when_threshold_met: true
