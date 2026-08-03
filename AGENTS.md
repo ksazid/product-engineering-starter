@@ -38,6 +38,23 @@ Superpowers may provide feature-level brainstorming, writing plans, Git worktree
 - Use subagents only where quality, isolation, or parallelism justifies the additional model cost.
 - Repository preflight, security gates, certification, and human approval remain mandatory.
 
+## Risk-triggered delivery graph
+
+The graph is unavailable in Lite mode. Standard and Enterprise may use it only after a reviewed risk or complexity trigger and explicit human approval.
+
+- Standard uses `router → implementer → deterministic checks → reviewer → human checkpoint`.
+- Enterprise may use `router → selected specialists → integrator → deterministic checks → independent reviewer → human checkpoint`.
+- Do not activate it for routine CRUD, copy changes, isolated styling, or low-risk maintenance unless measured evidence shows value.
+- Reuse one focused context pack across nodes.
+- Run deterministic checks before reviewer calls.
+- Skip unchanged nodes using input or commit hashes.
+- Use one integrator, cap specialists and review cycles, record estimated token usage, and stop when the budget is exceeded.
+- The graph cannot change approved scope, accept security risk, merge, or deploy.
+
+Configuration: `.engineering/DELIVERY-GRAPH.json`.
+Guidance: `docs/integrations/DELIVERY-GRAPH.md`.
+Check: `npm run delivery-graph:check`.
+
 ## Optional knowledge, memory, and brevity integrations
 
 NotebookLM, MemPalace, and Caveman are optional and disabled by default.
