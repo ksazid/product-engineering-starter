@@ -15,8 +15,10 @@ const ACTIVE_LIFECYCLES = new Set([
   'observed',
   'validated'
 ]);
-const CERTIFICATION_LIFECYCLES = new Set(['certification','certified','release-pending','released','observed','validated']);
-const RELEASE_LIFECYCLES = new Set(['release-pending','released','observed','validated']);
+const CERTIFICATION_STAGE_LIFECYCLES = new Set(['certification','certified','release-pending','released','observed','validated']);
+const CERTIFICATION_REQUIRED_LIFECYCLES = new Set(['certified','release-pending','released','observed','validated']);
+const RELEASE_STAGE_LIFECYCLES = new Set(['release-pending','released','observed','validated']);
+const RELEASE_AUTHORIZED_LIFECYCLES = new Set(['released','observed','validated']);
 
 export function loadDelivery() {
   const governance = json('delivery/governance.json');
@@ -134,16 +136,16 @@ function validateSlice(slice, delivery, label, errors, warnings) {
     record(errors, !ACTIVE_LIFECYCLES.has(slice.lifecycle) && ['specification-only','contracts-only'].includes(slice.implementationMode), `${label}: unresolved decisions block implementation`);
   }
   if (pendingBlocks.has('certification')) {
-    record(errors, !CERTIFICATION_LIFECYCLES.has(slice.lifecycle), `${label}: unresolved decisions block certification`);
+    record(errors, !CERTIFICATION_STAGE_LIFECYCLES.has(slice.lifecycle), `${label}: unresolved decisions block certification`);
   }
   if (pendingBlocks.has('release')) {
-    record(errors, !RELEASE_LIFECYCLES.has(slice.lifecycle) && ['not-authorized','pending'].includes(slice.release?.status), `${label}: unresolved decisions block release`);
+    record(errors, !RELEASE_STAGE_LIFECYCLES.has(slice.lifecycle) && ['not-authorized','pending'].includes(slice.release?.status), `${label}: unresolved decisions block release`);
   }
   if (pendingBlocks.has('production-enable')) {
     record(errors, slice.implementationMode !== 'production-enabled', `${label}: unresolved decisions block production enablement`);
   }
 
-  if (ACTIVE_LIFECYCLES.has(slice.lifecycle) || ['runtime-enabled','production-enabled'].includes(slice.implementationMode)) {
+  if (ACTIVE_LIFECYCLES.has(slice.lifecycle) || ['runtime-disabled','runtime-enabled','production-enabled'].includes(slice.implementationMode)) {
     record(errors, approved(slice,'scope'), `${label}: scope approval is required before implementation`);
     record(errors, approved(slice,'implementation'), `${label}: implementation approval is required before runtime work`);
   }
@@ -164,7 +166,7 @@ function validateSlice(slice, delivery, label, errors, warnings) {
     const certificationApproval = approval(slice,'certification');
     record(errors, certificationApproval?.commitSha === slice.certification.commitSha, `${label}: certification approval must bind the certified SHA`);
   }
-  if (CERTIFICATION_LIFECYCLES.has(slice.lifecycle)) {
+  if (CERTIFICATION_REQUIRED_LIFECYCLES.has(slice.lifecycle)) {
     record(errors, slice.certification?.status === 'passed', `${label}: lifecycle ${slice.lifecycle} requires passed certification`);
   }
 
@@ -177,7 +179,12 @@ function validateSlice(slice, delivery, label, errors, warnings) {
   const rollbacks = rollbackMap(delivery);
   if (slice.rollback?.rollbackId) record(errors, rollbacks.has(slice.rollback.rollbackId), `${label}: references unknown rollback ${slice.rollback.rollbackId}`);
 
-  if (['approved','deploying','released'].includes(slice.release?.status) || RELEASE_LIFECYCLES.has(slice.lifecycle)) {
+  if (slice.lifecycle === 'release-pending') {
+    record(errors, slice.certification?.status === 'passed', `${label}: release-pending requires passed certification`);
+    record(errors, isNonEmpty(slice.release?.releaseId), `${label}: release-pending requires a releaseId`);
+    record(errors, ['pending','approved'].includes(slice.release?.status), `${label}: release-pending requires pending or approved release status`);
+  }
+  if (['approved','deploying','released'].includes(slice.release?.status) || RELEASE_AUTHORIZED_LIFECYCLES.has(slice.lifecycle)) {
     record(errors, slice.certification?.status === 'passed', `${label}: release requires passed certification`);
     record(errors, approved(slice,'release'), `${label}: release approval is required`);
     record(errors, isNonEmpty(slice.release?.releaseId), `${label}: releaseId is required`);
