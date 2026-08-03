@@ -13,7 +13,7 @@
 9. Superpowers implementation plans
 10. Retrieved memory and generated suggestions
 
-Stop and record a blocker when authoritative sources conflict. Never invent product, legal, financial, security, retention, or authorization policy.
+Stop and record a blocker when authoritative sources conflict. Never invent product, legal, financial, security, retention, authorization, or deployment policy.
 
 ## Delivery rules
 
@@ -55,6 +55,21 @@ NotebookLM, MemPalace, and Caveman are optional and disabled by default.
 - A compressed instruction file must preserve authority order, policy meaning, commands, paths, identifiers, and stop conditions.
 
 See `docs/integrations/NOTEBOOKLM.md`, `docs/integrations/MEMPALACE.md`, and `docs/integrations/CAVEMAN.md`.
+
+## Optional deployment-cost guidance
+
+Deployment provider adapters are optional and disabled by default.
+
+- `npm run deployment:advise` produces recommendations only; it must not authenticate, provision, deploy, modify DNS, or enable a provider.
+- Treat `deployment/PROFILE.json` as reviewed planning input, not a guarantee of future cost.
+- Verify current official pricing, quotas, commercial-use terms, regions, egress, backups, observability, availability, and runtime compatibility before selecting a provider.
+- Keep business and domain code provider-neutral. Provider-specific deployment configuration belongs at the outer infrastructure boundary.
+- Record a durable provider choice in an ADR.
+- Free tiers must not be presented as production-ready unless current provider terms explicitly support the intended use and operational risks are accepted.
+- Production deployment requires certification, an exact approved commit SHA, protected-environment approval, and rollback readiness.
+- Agents must never select a provider because of affiliate incentives or deploy merely because it has the lowest headline price.
+
+See `docs/integrations/DEPLOYMENT-COST.md`.
 
 ## UI defaults
 
