@@ -1,6 +1,14 @@
 {
   "stage": "pilot",
   "commercialUse": false,
+  "deploymentMode": "advisor-recommended",
+  "approvedSelection": false,
+  "singleProvider": null,
+  "splitProviders": {
+    "frontend": null,
+    "api": null,
+    "database": null
+  },
   "frontend": "nextjs",
   "backend": "aspnet-container",
   "database": "postgresql",
@@ -12,5 +20,12 @@
   "backgroundJobsRequired": false,
   "regionRequirements": [],
   "monthlyBudgetUsd": 0,
-  "notes": "Replace this example with project-specific, reviewed assumptions before relying on recommendations."
+  "releasePolicy": {
+    "sameCertifiedSha": true,
+    "apiFirst": true,
+    "requireApiHealthCheck": true,
+    "requireEndToEndSmokeTest": true,
+    "requireRollbackPlan": true
+  },
+  "notes": "Choose single-provider, split, or advisor-recommended. A human must approve the final selection before provider configuration or deployment."
 }
