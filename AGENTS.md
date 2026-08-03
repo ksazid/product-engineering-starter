@@ -11,7 +11,7 @@
 7. Active vertical slice
 8. Repository skills
 9. Superpowers implementation plans
-10. Generated suggestions
+10. Retrieved memory and generated suggestions
 
 Stop and record a blocker when authoritative sources conflict. Never invent product, legal, financial, security, retention, or authorization policy.
 
@@ -38,11 +38,15 @@ Superpowers may provide feature-level brainstorming, writing plans, Git worktree
 - Use subagents only where quality, isolation, or parallelism justifies the additional model cost.
 - Repository preflight, security gates, certification, and human approval remain mandatory.
 
-## Optional knowledge and brevity integrations
+## Optional knowledge, memory, and brevity integrations
 
-NotebookLM and Caveman are optional and disabled by default.
+NotebookLM, MemPalace, and Caveman are optional and disabled by default.
 
-- GitHub is always authoritative. NotebookLM is only a team-learning, onboarding, and explanatory Q&A layer.
+- GitHub is always authoritative.
+- NotebookLM is only a team-learning, onboarding, and explanatory Q&A layer.
+- MemPalace is only a retrieval layer for relevant historical context. Every retrieved memory must be verified against current Git files before it is used.
+- Prefer MemPalace local storage. Never index secrets, credentials, production dumps, regulated personal data, or restricted findings by default.
+- Use MemPalace to build focused active-slice context packs, not to inject the entire memory store into every turn.
 - Export NotebookLM sources only through `npm run knowledge:export`, review the generated bundle, and never include secrets, private customer data, restricted findings, or production logs.
 - Caveman should default to `lite` and be used only for routine summaries, CI triage, commit messages, and concise review comments.
 - Do not apply Caveman brevity to PRD/TRD analysis, ADR rationale, security findings, acceptance criteria, implementation plans, certification, or release evidence.
@@ -50,7 +54,7 @@ NotebookLM and Caveman are optional and disabled by default.
 - Never compress PRDs, TRDs, ADRs, security policies, API contracts, release evidence, README files, source code, tests, or migrations.
 - A compressed instruction file must preserve authority order, policy meaning, commands, paths, identifiers, and stop conditions.
 
-See `docs/integrations/NOTEBOOKLM.md` and `docs/integrations/CAVEMAN.md`.
+See `docs/integrations/NOTEBOOKLM.md`, `docs/integrations/MEMPALACE.md`, and `docs/integrations/CAVEMAN.md`.
 
 ## UI defaults
 
