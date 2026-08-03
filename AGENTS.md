@@ -10,7 +10,8 @@
 6. Approved delivery plan
 7. Active vertical slice
 8. Repository skills
-9. Generated suggestions
+9. Superpowers implementation plans
+10. Generated suggestions
 
 Stop and record a blocker when authoritative sources conflict. Never invent product, legal, financial, security, retention, or authorization policy.
 
@@ -22,8 +23,20 @@ Stop and record a blocker when authoritative sources conflict. Never invent prod
 - Use a modular monolith and vertical slices unless an approved ADR says otherwise.
 - Do not add microservices, generic repositories, event buses, or abstractions mechanically.
 - Run deterministic checks before model-backed review.
-- The implementer cannot issue the final completion verdict.
 - No autonomous merge or production deployment.
+
+## Superpowers execution
+
+After intake, planning, and slice approval, use `.agents/skills/using-superpowers/SKILL.md` as the default implementation methodology.
+
+Superpowers may provide feature-level brainstorming, writing plans, Git worktrees, TDD, plan execution, subagent-driven development, systematic debugging, code review, verification, and branch completion. It does not own product scope, requirement approval, architecture policy, security acceptance, certification, merge, or release.
+
+- Superpowers plans remain subordinate to the approved PRD, TRD, ADRs, security decisions, design baseline, and active slice.
+- Use brainstorming only to clarify implementation detail; do not silently reopen approved product decisions.
+- Prefer coherent 10–30 minute implementation steps when they remain independently verifiable.
+- Use TDD strongly for domain rules, APIs, regressions, and state machines; apply judgment to exploratory visual work.
+- Use subagents only where quality, isolation, or parallelism justifies the additional model cost.
+- Repository preflight, security gates, certification, and human approval remain mandatory.
 
 ## UI defaults
 
@@ -46,7 +59,8 @@ Recommended conditional order:
 5. Impeccable for bounded polish
 6. Emil principles only where motion adds clarity
 7. Ponytail for implementation
-8. Automated accessibility, responsive, and visual verification
+8. Superpowers implementation and review workflow
+9. Automated accessibility, responsive, visual, security, and certification checks
 
 ## Verdicts
 
