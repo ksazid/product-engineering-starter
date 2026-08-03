@@ -4,12 +4,14 @@ mode: lite
 
 available_modes:
   lite:
-    description: PRD/TRD intake, planning, vertical slices, deterministic preflight, human review.
+    description: PRD/TRD intake, planning, vertical slices, deterministic preflight, human review, and optional team-knowledge/brevity integrations.
     capabilities:
       - planning
       - slices
       - deterministic-validation
       - baseline-security
+      - optional-notebooklm-export
+      - optional-caveman-lite
   standard:
     description: Lite plus ADR governance, evidence bundles, threat modelling and release certification.
     capabilities:
@@ -17,6 +19,8 @@ available_modes:
       - slices
       - deterministic-validation
       - baseline-security
+      - optional-notebooklm-export
+      - optional-caveman-lite
       - adrs
       - evidence
       - threat-model
@@ -28,6 +32,8 @@ available_modes:
       - slices
       - deterministic-validation
       - baseline-security
+      - optional-notebooklm-export
+      - optional-caveman-lite
       - adrs
       - evidence
       - threat-model
@@ -42,7 +48,11 @@ plugins:
     - planning
     - security-baseline
     - web-ui
+  optional_enabled_by_user: []
   available:
+    - notebooklm-knowledge
+    - caveman-lite
+    - caveman-context-compress
     - codex-security
     - maker-checker
     - worktrees
@@ -56,4 +66,7 @@ plugins:
 policy:
   auto_enable_recommendations: false
   require_human_approval_for_mode_change: true
+  require_human_approval_for_context_compression: true
+  notebooklm_is_non_authoritative: true
+  caveman_default_level: lite
   recommend_only_when_threshold_met: true
