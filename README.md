@@ -238,34 +238,184 @@ PES_CONTEXT_COMPRESSION_APPROVED=1 npm run optimize:context -- --apply
 
 The wrapper uses an explicit allowlist, creates backups, and excludes authoritative or public documents. Full guidance: `docs/integrations/CAVEMAN.md`.
 
-## Optional deployment-cost advisor
+## Deployment strategy
 
-PES includes provider-neutral decision guidance for Cloudflare, Netlify, Vercel, and Render. No provider is enabled by default, and the advisor never deploys anything.
+PES treats frontend, API, and database as one coordinated release, even when they are hosted by different providers. The user controls the topology; the advisor only recommends.
 
-Review and edit:
+### Deployment modes
+
+| Mode | Description | Best fit |
+| --- | --- | --- |
+| **Advisor recommended** | PES compares supported topologies and recommends the best fit for the reviewed workload profile. The user must approve the result. | Default for most projects |
+| **Single provider** | Frontend, API, and database use one provider where the required runtimes and managed database are supported. | Prototypes and teams prioritising operational simplicity |
+| **Split deployment** | Frontend, API, and database may each use a different provider. | Cost optimisation, runtime fit, regional needs, or production flexibility |
+
+Selection is configured in:
 
 ```text
 deployment/PROFILE.json
 ```
 
-Then run:
+Supported selection values:
+
+```json
+{
+  "deploymentMode": "advisor-recommended",
+  "selectedProviders": {
+    "single": null,
+    "frontend": null,
+    "api": null,
+    "database": null
+  }
+}
+```
+
+Use `single-provider`, `split`, or `advisor-recommended`. A selected topology remains inactive until a human approves it and records a durable production decision in an ADR.
+
+### Independently selectable components
+
+**Frontend adapters**
+
+- Cloudflare
+- Netlify
+- Vercel
+- Render
+- Other compatible providers added through an approved adapter
+
+**API adapters**
+
+- Render
+- Container-compatible cloud platforms
+- Edge or serverless platforms when runtime constraints are satisfied
+- Other provider adapters added through an approved slice
+
+**Database adapters**
+
+- Neon PostgreSQL
+- Supabase PostgreSQL
+- Render PostgreSQL
+- Provider-managed PostgreSQL
+- Other compatible managed PostgreSQL services
+
+The advisor considers database pooling, connection limits, backups, point-in-time recovery, residency, availability, cross-provider latency, egress, and operational ownership—not only headline price.
+
+### Example topologies
+
+Single-provider topology:
+
+```text
+Selected provider
+├── Frontend
+├── API
+└── PostgreSQL
+```
+
+Split topology:
+
+```text
+Vercel
+└── Frontend
+
+Render
+└── API
+
+Neon
+└── PostgreSQL
+```
+
+Another cost-oriented split topology:
+
+```text
+Cloudflare or Netlify
+└── Frontend
+
+Render or another container host
+└── API
+
+Neon or Supabase
+└── PostgreSQL
+```
+
+These are examples, not fixed recommendations. Provider pricing, terms, quotas, regions, and capabilities must be verified against current official documentation before approval.
+
+### Coordinated release policy
+
+All components must use one certified release identity and an approved compatibility contract.
+
+```text
+Certified Git SHA
+        ↓
+Database backup/readiness check
+        ↓
+Backward-compatible migrations
+        ↓
+API deployment
+        ↓
+API health, readiness, auth, CORS, and contract checks
+        ↓
+Frontend deployment with verified API endpoint
+        ↓
+Frontend → API → database smoke tests
+        ↓
+Human production approval
+```
+
+Required rules:
+
+- Frontend and API must correspond to the same certified Git SHA or recorded release manifest.
+- Database migrations must be backward compatible during rollout wherever practical.
+- The API is deployed and verified before dependent frontend changes are promoted.
+- A failure in any component fails the coordinated release.
+- Frontend, API, and database each need an explicit rollback or recovery path.
+- Cross-provider networking, secrets, TLS, CORS, observability, latency, and egress must be reviewed.
+- Deployment remains manual or protected-environment controlled; the advisor never deploys automatically.
+
+### Deployment advisor
+
+Run:
 
 ```bash
 npm run deployment:advise
 ```
 
-The advisor ranks provider fit using workload characteristics such as frontend/backend runtime, project stage, commercial use, traffic, bandwidth, cold-start tolerance, preview deployments, edge execution, background jobs, regional constraints, and budget.
+The advisor compares topology and provider fit using:
 
-The result is only a recommendation. Before selecting a provider, verify its current official pricing, quotas, egress, runtime compatibility, regional availability, commercial-use terms, backups, observability, security, and rollback support. Record a durable provider decision in an ADR.
+- frontend and API runtime compatibility
+- PostgreSQL requirements
+- prototype, pilot, or production stage
+- commercial use
+- expected traffic and bandwidth
+- cold-start tolerance
+- preview deployment needs
+- edge execution
+- background jobs
+- regional and data-residency constraints
+- database recovery requirements
+- cross-provider complexity
+- stated monthly budget
 
-Current optional adapter identifiers:
+Current optional deployment adapter identifiers include:
 
 - `deploy-cloudflare`
 - `deploy-netlify`
 - `deploy-vercel`
 - `deploy-render`
+- `database-neon`
+- `database-supabase`
+- `database-render-postgres`
+- `database-managed-postgres`
 
-Provider-specific CLI tools and configuration should be added only after an approved slice selects the provider. Production deployment still requires certification, exact-SHA approval, a protected environment, and rollback readiness.
+Provider-specific CLI tools and configuration are added only after an approved slice selects the provider.
+
+### Planned deployment wizard
+
+A future optional command may provide an interactive setup:
+
+```bash
+npm run deployment:init
+```
+
+The wizard would ask about runtime, topology preference, database, budget, region, traffic, cold starts, background jobs, recovery expectations, and preview deployments; then generate a reviewed profile. It would still require explicit human approval and would not provision infrastructure automatically.
 
 Full guidance: `docs/integrations/DEPLOYMENT-COST.md`.
 
