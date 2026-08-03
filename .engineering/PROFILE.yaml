@@ -15,7 +15,7 @@ available_modes:
       - optional-caveman-lite
       - optional-deployment-cost-advisor
   standard:
-    description: Lite plus ADR governance, evidence bundles, threat modelling and release certification.
+    description: Lite plus ADR governance, evidence bundles, threat modelling, certification and an optional risk-triggered review graph.
     capabilities:
       - planning
       - slices
@@ -29,8 +29,9 @@ available_modes:
       - evidence
       - threat-model
       - certification
+      - optional-standard-delivery-graph
   enterprise:
-    description: Standard plus maker/checker separation, worktrees, budgets and risk-triggered Codex Security.
+    description: Standard plus maker/checker separation, worktrees, budgets, risk-triggered Codex Security and an optional full delivery graph.
     capabilities:
       - planning
       - slices
@@ -48,6 +49,7 @@ available_modes:
       - worktrees
       - agent-budgets
       - codex-security
+      - optional-enterprise-delivery-graph
 
 plugins:
   enabled:
@@ -61,6 +63,8 @@ plugins:
     - caveman-lite
     - caveman-context-compress
     - deployment-cost-advisor
+    - standard-delivery-graph
+    - enterprise-delivery-graph
     - deploy-cloudflare
     - deploy-netlify
     - deploy-vercel
@@ -81,10 +85,13 @@ policy:
   require_human_approval_for_context_compression: true
   require_human_approval_for_deployment_provider: true
   require_human_approval_for_production_deployment: true
+  require_human_approval_for_delivery_graph: true
   notebooklm_is_non_authoritative: true
   mempalace_is_non_authoritative: true
   mempalace_default_storage: local
   caveman_default_level: lite
   deployment_advisor_is_recommendation_only: true
   deployment_provider_default: none
+  delivery_graph_default: disabled
+  delivery_graph_lite_allowed: false
   recommend_only_when_threshold_met: true
