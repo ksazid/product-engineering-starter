@@ -1,8 +1,32 @@
 # Product Engineering Starter
 
-An open-source, governed starter for turning an approved **PRD** and **TRD** into a traceable, secure, cost-controlled web product.
+An open-source governance layer for turning an approved **PRD** and **TRD** into a traceable, secure, cost-controlled web product.
 
-It combines vertical-slice delivery, Loop Engineering-inspired state and budgets, deterministic CI, optional maker/checker verification, risk-triggered Codex Security, and human-controlled release gates.
+Product Engineering Starter decides **what is approved and safe to build**. [Superpowers](https://github.com/obra/superpowers) is the default methodology for **how an approved slice is planned, implemented, reviewed, debugged, and finished**.
+
+## What the starter provides
+
+- PRD/TRD intake and conflict detection
+- source-linked requirement normalization and traceability
+- roadmap, milestones, epics, and vertical slices
+- architecture and security governance
+- focused slice context, allowed paths, and protected paths
+- Loop Engineering-inspired durable state, budgets, gates, and run history
+- deterministic preflight, risk-triggered Codex Security, and certification evidence
+- human-controlled merge and exact-SHA production release
+
+## What Superpowers provides
+
+- feature-level brainstorming and design clarification
+- detailed implementation plans
+- isolated Git worktrees
+- test-driven development
+- plan execution or subagent-driven development
+- specification-compliance and code-quality review
+- systematic debugging and verification before completion
+- branch completion and PR/merge choices
+
+Superpowers does not replace the approved PRD, TRD, ADRs, security decisions, design baseline, active slice, certification, or release approval.
 
 ## Default web stack
 
@@ -17,19 +41,18 @@ It combines vertical-slice delivery, Loop Engineering-inspired state and budgets
 
 ## Prerequisites
 
-Install:
-
 - Git 2.40+
 - Node.js 24 LTS with npm
 - .NET SDK 10.x
 - Docker Desktop or Docker Engine with Compose v2
-- Optional: GitHub CLI, PostgreSQL client, Python 3.10+ and Codex Security access
+- A supported coding-agent harness for Superpowers
+- Optional: GitHub CLI, PostgreSQL client, Python 3.10+, and Codex Security access
 
-## Install from GitHub
+## Install the starter
 
 ### Recommended: GitHub template
 
-Enable **Settings → Template repository**, then select **Use this template** and create a new repository.
+Enable **Settings → Template repository**, then select **Use this template**.
 
 ### Clone directly
 
@@ -47,13 +70,45 @@ git remote remove origin
 git remote add origin https://github.com/<account>/<project>.git
 ```
 
+## Install Superpowers
+
+Superpowers is installed separately in each coding-agent harness.
+
+### Codex App or Codex CLI
+
+Open the plugin interface, search for `Superpowers`, and install it from the official marketplace:
+
+```text
+/plugins
+```
+
+### Claude Code
+
+```text
+/plugin install superpowers@claude-plugins-official
+```
+
+### Cursor
+
+```text
+/add-plugin superpowers
+```
+
+For Antigravity, Factory Droid, Gemini CLI, GitHub Copilot CLI, Kimi Code, OpenCode, or Pi, follow the upstream installation guide in `obra/superpowers`.
+
+The repository-local integration is documented at:
+
+```text
+.agents/skills/using-superpowers/SKILL.md
+```
+
 ## Start a product
 
 1. Complete `product/PRD.md`.
 2. Complete `product/TRD.md`.
 3. Add design rules to `product/DESIGN.md`.
 4. Define terminology in `product/GLOSSARY.md`.
-5. Change PRD/TRD status from `Draft` only after review.
+5. Approve the source documents.
 6. Run intake and planning.
 
 ```bash
@@ -63,22 +118,24 @@ npm run planning:validate
 npm run engineering:advise
 ```
 
-The intake command blocks missing headings, unresolved draft status, and unsupported assumptions rather than inventing policy.
+The intake process blocks missing sections, unresolved draft status, conflicts, and unsupported assumptions rather than inventing policy.
 
-## Delivery workflow
+## End-to-end workflow
 
 ```text
 PRD + TRD
-→ product, technical and security intake
+→ product, technical, and security intake
 → source-linked requirements
-→ architecture baseline and proposed ADRs
-→ roadmap, milestones, epics and slices
+→ roadmap, milestones, epics, and vertical slices
 → human plan approval
 → activate one vertical slice
-→ implement one bounded task
+→ generate focused slice context
+→ Superpowers brainstorming when clarification is needed
+→ Superpowers writing-plans
+→ worktree + TDD + implementation
+→ spec-compliance and code-quality review
 → deterministic preflight
 → risk-triggered security review
-→ independent verification when justified
 → certification evidence
 → human merge and exact-SHA release
 ```
@@ -91,13 +148,36 @@ npm run slice:status
 npm run slice:validate
 ```
 
+Then instruct the coding agent to read:
+
+```text
+AGENTS.md
+.agents/skills/using-superpowers/SKILL.md
+docs/slices/VS-01.md
+delivery/current-slice.json
+```
+
+Superpowers may clarify implementation details, but it must not silently change approved scope or policy.
+
+## Responsibility boundary
+
+| Product Engineering Starter | Superpowers |
+| --- | --- |
+| Product and technical authority | Feature-level clarification |
+| Requirement IDs and traceability | Implementation planning |
+| Roadmap and vertical slices | Worktrees and execution |
+| Architecture and security policy | TDD and debugging |
+| Protected paths and human gates | Spec and code-quality review |
+| Preflight and certification | Branch completion workflow |
+| Merge and release approval | No release authority |
+
 ## Operating modes
 
 The project starts in **Lite** mode.
 
-- **Lite:** intake, planning, slices, deterministic validation, baseline security and human review.
-- **Standard:** adds ADRs, threat modelling, evidence bundles and release certification.
-- **Enterprise:** adds maker/checker separation, worktrees, agent budgets and risk-triggered Codex Security.
+- **Lite:** intake, planning, slices, Superpowers single-agent execution, deterministic validation, baseline security, and human review.
+- **Standard:** adds ADRs, threat modelling, evidence bundles, Superpowers worktrees/reviews, and release certification.
+- **Enterprise:** adds budgeted subagent-driven development, independent security review, and risk-triggered Codex Security.
 
 The active mode and plugins are declared in `.engineering/PROFILE.yaml`.
 
@@ -108,6 +188,19 @@ npm run engineering:advise
 
 The advisor recommends capabilities based on project evidence. It never enables plugins or changes mode automatically.
 
+## Cost controls
+
+Superpowers can improve total delivery cost by reducing ad-hoc planning and rework, but subagents and repeated reviews can increase token use. The starter therefore applies these defaults:
+
+- deterministic validation before model-backed review
+- focused slice context rather than full-repository context
+- coherent 10–30 minute implementation steps instead of unnecessary fragmentation
+- single-agent execution for low-risk work
+- subagents only when complexity or risk justifies them
+- capped attempts and CI repair cycles
+- no model call when the relevant state or commit SHA has not changed
+- full certification only when a slice is ready
+
 ## Loop Engineering controls
 
 - `.engineering/STATE.json` — durable current state
@@ -117,25 +210,35 @@ The advisor recommends capabilities based on project evidence. It never enables 
 - `.engineering/POLICY.yaml` — architecture and execution defaults
 - `.engineering/GROWTH-RULES.yaml` — evidence-based upgrade recommendations
 
+These controls constrain Superpowers execution rather than duplicate it.
+
 ## Default skills
 
-Repository-local skills live under `.agents/skills/`:
+Repository-local governance skills live under `.agents/skills/`:
 
 - product and technical intake
 - security intake
 - requirement normalization
 - architecture baseline and review
 - project and slice planning
-- task decomposition
-- implementation
-- independent verification
 - UI review
-- CI triage
 - evidence building
 - release verification
+- **using-superpowers** for the default implementation methodology
 - **Taste Skill (`design-taste-frontend`)** for landing pages, marketing surfaces, portfolios, editorial pages, and explicitly approved redesigns
 
-Load only relevant skills for each task. A normal feature uses `slice-planner`, `implementer`, and `verifier`; a specialist is added only when triggered.
+Superpowers supplies the lower-level execution skills such as brainstorming, writing plans, worktrees, TDD, executing plans, subagent-driven development, debugging, review, verification, and branch completion.
+
+## UI workflow
+
+Use the approved product design baseline first, then only the relevant installed UI skills:
+
+1. **Taste Skill** for visual direction and anti-template discipline on landing, marketing, portfolio, editorial, and approved redesign surfaces.
+2. UI UX Pro Max for product workflows, accessibility, responsive behavior, forms, and states.
+3. Impeccable for bounded visual polish.
+4. Emil design engineering for purposeful motion and reduced-motion equivalents.
+5. Ponytail for maintainable minimum-change implementation.
+6. Superpowers for planning, implementation, review, and verification.
 
 Taste Skill is installed locally at:
 
@@ -143,31 +246,19 @@ Taste Skill is installed locally at:
 .agents/skills/design-taste-frontend/SKILL.md
 ```
 
-To install or update it from the maintained skill repository:
+Update it with:
 
 ```bash
 npx skills add https://github.com/ksazid/taste-skill --skill "design-taste-frontend"
 ```
 
-Taste Skill must not override approved product requirements, design baselines, accessibility rules, or active-slice scope. It is not the primary skill for dashboards, dense data tables, administrative queues, complex forms, or multi-step product workflows.
-
-## UI workflow
-
-For UI work, use the approved product design baseline first, then project-installed UI skills as relevant:
-
-1. **Taste Skill** for visual direction, layout, typography, spacing, hierarchy, and anti-template discipline on landing, marketing, portfolio, editorial, and approved redesign surfaces.
-2. UI UX Pro Max for UX, accessibility, responsive behavior and states.
-3. Impeccable for bounded visual polish.
-4. Emil design engineering for purposeful motion and reduced-motion equivalents.
-5. Ponytail for maintainable minimum-change implementation.
-
-Taste Skill is vendored as a project-local integration. The other external UI skills are installed separately when required by a project.
+Taste Skill must not override approved product requirements, accessibility rules, design baselines, or active-slice scope. It is not the primary skill for dashboards, tables, administrative queues, complex forms, or multi-step workflows.
 
 ## Security model
 
-Every relevant PR should use deterministic checks such as secret scanning, dependency validation, authorization tests, security headers and protected-path rules.
+Every relevant PR should use deterministic checks such as secret scanning, dependency validation, authorization tests, security headers, and protected-path rules.
 
-Codex Security is optional and risk-triggered for authentication, authorization, payments, uploads, webhooks, sensitive persistence, migrations and release candidates.
+Codex Security is optional and risk-triggered for authentication, authorization, payments, uploads, webhooks, sensitive persistence, migrations, and release candidates.
 
 ```bash
 npm install --save-dev @openai/codex-security
@@ -196,20 +287,16 @@ npm run profile:show
 
 ## Large requirements
 
-For a large PRD/TRD, parse the whole product once, plan broadly at release and milestone level, detail only the next milestone, and execute only the active slice. Generate focused context packs under `delivery/context/<slice-id>/` rather than sending the whole repository to every agent.
-
-Recommended hierarchy:
+For a large PRD/TRD, parse the whole product once, plan broadly at release and milestone level, detail only the next milestone, and execute only the active slice. Generate focused context packs under `delivery/context/<slice-id>/` rather than sending the whole product history to every agent.
 
 ```text
-Product → Release → Milestone → Epic → Vertical Slice → Task
+Product → Release → Milestone → Epic → Vertical Slice → Superpowers Plan → Task
 ```
 
 ## GitHub setup
 
-After creating a project from the starter:
-
 1. Protect `main` and require pull requests.
-2. Require CI checks appropriate to the project.
+2. Require appropriate CI checks.
 3. Create a protected `production` environment with human reviewers.
 4. Store deployment and Codex Security credentials in GitHub secrets.
 5. Enable Dependabot and secret scanning where available.
@@ -217,9 +304,9 @@ After creating a project from the starter:
 
 ## Deliberate exclusions
 
-No microservice generation, Kubernetes default, event sourcing default, generic repositories, large agent swarms, autonomous merge, autonomous production deployment, custom project-management UI, or mandatory Ruflo dependency.
+No microservice generation, Kubernetes default, event sourcing default, generic repositories, uncontrolled agent swarms, autonomous merge, autonomous production deployment, custom project-management UI, or mandatory Ruflo dependency.
 
-Ruflo may be added later as an optional orchestration adapter only when measured project needs justify it.
+Superpowers is the default execution methodology; Ruflo remains unnecessary unless future measured requirements justify a separate orchestration runtime.
 
 ## License
 
