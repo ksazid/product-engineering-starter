@@ -1,0 +1,16 @@
+{
+  "stage": "pilot",
+  "commercialUse": false,
+  "frontend": "nextjs",
+  "backend": "aspnet-container",
+  "database": "postgresql",
+  "traffic": "low",
+  "bandwidth": "low",
+  "coldStartsAccepted": true,
+  "previewDeploymentsRequired": true,
+  "edgeExecutionRequired": false,
+  "backgroundJobsRequired": false,
+  "regionRequirements": [],
+  "monthlyBudgetUsd": 0,
+  "notes": "Replace this example with project-specific, reviewed assumptions before relying on recommendations."
+}
