@@ -2,40 +2,39 @@
 
 An open-source governance layer for turning an approved **PRD** and **TRD** into a traceable, secure, cost-controlled web product.
 
-Product Engineering Starter decides **what is approved and safe to build**. [Superpowers](https://github.com/obra/superpowers) is the default methodology for **how an approved slice is planned, implemented, reviewed, debugged, and finished**.
+Product Engineering Starter (PES) decides **what is approved and safe to build**. [Superpowers](https://github.com/obra/superpowers) is the default methodology for **how an approved slice is planned, implemented, reviewed, debugged, and finished**.
 
-## What the starter provides
+## What PES provides
 
 - PRD/TRD intake and conflict detection
-- source-linked requirement normalization and traceability
+- source-linked requirements and traceability
 - roadmap, milestones, epics, and vertical slices
-- architecture and security governance
+- architecture, design, and security governance
 - focused slice context, allowed paths, and protected paths
-- Loop Engineering-inspired durable state, budgets, gates, and run history
+- Loop Engineering-inspired state, budgets, gates, and run history
 - deterministic preflight, risk-triggered Codex Security, and certification evidence
 - human-controlled merge and exact-SHA production release
 
 ## What Superpowers provides
 
 - feature-level brainstorming and design clarification
-- detailed implementation plans
+- implementation plans
 - isolated Git worktrees
 - test-driven development
 - plan execution or subagent-driven development
 - specification-compliance and code-quality review
-- systematic debugging and verification before completion
+- systematic debugging and verification
 - branch completion and PR/merge choices
 
 Superpowers does not replace the approved PRD, TRD, ADRs, security decisions, design baseline, active slice, certification, or release approval.
 
 ## Default web stack
 
-- Next.js + TypeScript frontend
-- ASP.NET Core backend
+- Next.js + TypeScript
+- ASP.NET Core
 - PostgreSQL + EF Core
 - OpenAPI
-- xUnit integration and architecture tests
-- Playwright browser tests
+- xUnit and Playwright
 - Docker Compose
 - GitHub Actions
 
@@ -44,11 +43,11 @@ Superpowers does not replace the approved PRD, TRD, ADRs, security decisions, de
 - Git 2.40+
 - Node.js 24 LTS with npm
 - .NET SDK 10.x
-- Docker Desktop or Docker Engine with Compose v2
+- Docker with Compose v2
 - A supported coding-agent harness for Superpowers
-- Optional: GitHub CLI, PostgreSQL client, Python 3.10+, and Codex Security access
+- Optional: GitHub CLI, PostgreSQL client, Python 3.10+, Codex Security, NotebookLM, and Caveman
 
-## Install the starter
+## Install PES
 
 ### Recommended: GitHub template
 
@@ -72,15 +71,15 @@ git remote add origin https://github.com/<account>/<project>.git
 
 ## Install Superpowers
 
-Superpowers is installed separately in each coding-agent harness.
+Superpowers is installed separately for each coding-agent harness.
 
 ### Codex App or Codex CLI
-
-Open the plugin interface, search for `Superpowers`, and install it from the official marketplace:
 
 ```text
 /plugins
 ```
+
+Search for `Superpowers` and install it from the official marketplace.
 
 ### Claude Code
 
@@ -94,13 +93,7 @@ Open the plugin interface, search for `Superpowers`, and install it from the off
 /add-plugin superpowers
 ```
 
-For Antigravity, Factory Droid, Gemini CLI, GitHub Copilot CLI, Kimi Code, OpenCode, or Pi, follow the upstream installation guide in `obra/superpowers`.
-
-The repository-local integration is documented at:
-
-```text
-.agents/skills/using-superpowers/SKILL.md
-```
+For other supported harnesses, follow the upstream `obra/superpowers` guide. The PES integration boundary is documented at `.agents/skills/using-superpowers/SKILL.md`.
 
 ## Start a product
 
@@ -129,18 +122,15 @@ PRD + TRD
 → roadmap, milestones, epics, and vertical slices
 → human plan approval
 → activate one vertical slice
-→ generate focused slice context
-→ Superpowers brainstorming when clarification is needed
-→ Superpowers writing-plans
-→ worktree + TDD + implementation
-→ spec-compliance and code-quality review
+→ focused slice context
+→ Superpowers plan, worktree, TDD, implementation, and review
 → deterministic preflight
 → risk-triggered security review
 → certification evidence
 → human merge and exact-SHA release
 ```
 
-Activate a slice after creating `docs/slices/VS-01.md` and linking approved requirement IDs in `delivery/current-slice.json`:
+Activate a slice:
 
 ```bash
 npm run slice:activate -- VS-01
@@ -157,8 +147,6 @@ docs/slices/VS-01.md
 delivery/current-slice.json
 ```
 
-Superpowers may clarify implementation details, but it must not silently change approved scope or policy.
-
 ## Responsibility boundary
 
 | Product Engineering Starter | Superpowers |
@@ -173,33 +161,101 @@ Superpowers may clarify implementation details, but it must not silently change 
 
 ## Operating modes
 
-The project starts in **Lite** mode.
+PES starts in **Lite** mode.
 
 - **Lite:** intake, planning, slices, Superpowers single-agent execution, deterministic validation, baseline security, and human review.
 - **Standard:** adds ADRs, threat modelling, evidence bundles, Superpowers worktrees/reviews, and release certification.
 - **Enterprise:** adds budgeted subagent-driven development, independent security review, and risk-triggered Codex Security.
 
-The active mode and plugins are declared in `.engineering/PROFILE.yaml`.
+NotebookLM and Caveman Lite are optional in every mode and disabled by default. They do not change the mode or authority model.
 
 ```bash
 npm run profile:show
 npm run engineering:advise
 ```
 
-The advisor recommends capabilities based on project evidence. It never enables plugins or changes mode automatically.
+## Optional team knowledge: NotebookLM
+
+NotebookLM can be used as a team-learning and onboarding layer. **GitHub remains authoritative.** NotebookLM may summarize and explain PES, but it cannot approve requirements, decisions, security risk, certification, or releases.
+
+Create a curated bundle:
+
+```bash
+npm run knowledge:export
+```
+
+This writes:
+
+```text
+dist/knowledge/
+├── START-HERE.md
+├── SOURCE-MANIFEST.json
+└── curated repository documents
+```
+
+The manifest records the source paths, SHA-256 hashes, repository commit SHA, and export time. Review the bundle before uploading it to a shared NotebookLM notebook.
+
+Recommended notebook name:
+
+```text
+Product Engineering Starter — Team Guide
+```
+
+Never export secrets, credentials, private customer data, production logs, or restricted security findings. Full guidance: `docs/integrations/NOTEBOOKLM.md`.
+
+## Optional brevity and context optimization: Caveman
+
+Caveman is an optional plugin for shorter agent communication and guarded context compression. PES recommends **lite** mode only.
+
+Good uses:
+
+- status summaries
+- CI triage
+- commit messages
+- concise PR review comments
+- routine run summaries
+
+Do not use Caveman brevity for PRD/TRD analysis, ADR rationale, security findings, acceptance criteria, detailed implementation plans, certification, or release evidence.
+
+Install Caveman separately for the coding-agent harness. A common skills-registry command is:
+
+```bash
+npx skills add JuliusBrussee/caveman
+```
+
+Preview context optimization:
+
+```bash
+npm run optimize:context
+```
+
+The preview changes nothing. After installing `caveman-compress` and receiving human approval:
+
+```bash
+PES_CONTEXT_COMPRESSION_APPROVED=1 npm run optimize:context -- --apply
+```
+
+The wrapper:
+
+- compresses only an explicit allowlist of internal instruction files
+- creates timestamped backups under `.engineering/backups/context/`
+- stops on any failed compression
+- requires diff review and `npm run preflight`
+
+It never compresses PRDs, TRDs, ADRs, security policies, API contracts, release evidence, README files, source code, tests, or migrations. Full guidance: `docs/integrations/CAVEMAN.md`.
 
 ## Cost controls
 
-Superpowers can improve total delivery cost by reducing ad-hoc planning and rework, but subagents and repeated reviews can increase token use. The starter therefore applies these defaults:
-
 - deterministic validation before model-backed review
-- focused slice context rather than full-repository context
-- coherent 10–30 minute implementation steps instead of unnecessary fragmentation
+- focused slice context instead of full-repository context
+- coherent implementation steps
 - single-agent execution for low-risk work
-- subagents only when complexity or risk justifies them
+- subagents only when risk justifies their cost
 - capped attempts and CI repair cycles
-- no model call when the relevant state or commit SHA has not changed
 - full certification only when a slice is ready
+- NotebookLM export only after material documentation changes
+- Caveman disabled by default and limited to `lite`
+- context compression only after measured recurring input cost and human approval
 
 ## Loop Engineering controls
 
@@ -209,8 +265,7 @@ Superpowers can improve total delivery cost by reducing ad-hoc planning and rewo
 - `.engineering/GATES.yaml` — protected paths and human gates
 - `.engineering/POLICY.yaml` — architecture and execution defaults
 - `.engineering/GROWTH-RULES.yaml` — evidence-based upgrade recommendations
-
-These controls constrain Superpowers execution rather than duplicate it.
+- `.engineering/PROFILE.yaml` — modes and optional plugin declarations
 
 ## Default skills
 
@@ -224,39 +279,27 @@ Repository-local governance skills live under `.agents/skills/`:
 - UI review
 - evidence building
 - release verification
-- **using-superpowers** for the default implementation methodology
-- **Taste Skill (`design-taste-frontend`)** for landing pages, marketing surfaces, portfolios, editorial pages, and explicitly approved redesigns
+- `using-superpowers` for the default implementation methodology
+- `design-taste-frontend` for suitable marketing/editorial and approved redesign surfaces
 
-Superpowers supplies the lower-level execution skills such as brainstorming, writing plans, worktrees, TDD, executing plans, subagent-driven development, debugging, review, verification, and branch completion.
+Superpowers supplies lower-level execution skills such as brainstorming, plans, worktrees, TDD, execution, debugging, review, verification, and branch completion.
 
 ## UI workflow
 
-Use the approved product design baseline first, then only the relevant installed UI skills:
+Use the approved product design baseline first, then only relevant installed UI skills:
 
-1. **Taste Skill** for visual direction and anti-template discipline on landing, marketing, portfolio, editorial, and approved redesign surfaces.
-2. UI UX Pro Max for product workflows, accessibility, responsive behavior, forms, and states.
-3. Impeccable for bounded visual polish.
-4. Emil design engineering for purposeful motion and reduced-motion equivalents.
-5. Ponytail for maintainable minimum-change implementation.
-6. Superpowers for planning, implementation, review, and verification.
+1. Taste Skill for suitable visual-direction work.
+2. UI UX Pro Max for product workflows and accessibility.
+3. Impeccable for bounded polish.
+4. Emil design engineering for purposeful motion.
+5. Ponytail for maintainable implementation.
+6. Superpowers for planning, implementation, and review.
 
-Taste Skill is installed locally at:
-
-```text
-.agents/skills/design-taste-frontend/SKILL.md
-```
-
-Update it with:
-
-```bash
-npx skills add https://github.com/ksazid/taste-skill --skill "design-taste-frontend"
-```
-
-Taste Skill must not override approved product requirements, accessibility rules, design baselines, or active-slice scope. It is not the primary skill for dashboards, tables, administrative queues, complex forms, or multi-step workflows.
+Taste Skill is installed at `.agents/skills/design-taste-frontend/SKILL.md` and must not override approved requirements, accessibility, design baselines, or slice scope.
 
 ## Security model
 
-Every relevant PR should use deterministic checks such as secret scanning, dependency validation, authorization tests, security headers, and protected-path rules.
+Every relevant PR should use deterministic secret scanning, dependency validation, authorization tests, security headers, and protected-path rules.
 
 Codex Security is optional and risk-triggered for authentication, authorization, payments, uploads, webhooks, sensitive persistence, migrations, and release candidates.
 
@@ -266,7 +309,7 @@ npx @openai/codex-security login
 npx @openai/codex-security scan .
 ```
 
-In CI, use `OPENAI_API_KEY` or `CODEX_API_KEY`. High and critical findings require human review; agents must not silently suppress findings.
+High and critical findings require human review. Agents must not silently suppress findings.
 
 ## Main commands
 
@@ -279,6 +322,8 @@ npm run slice:status
 npm run slice:validate
 npm run security:classify -- <changed-files>
 npm run delivery:status
+npm run knowledge:export
+npm run optimize:context
 npm run preflight
 npm run certify
 npm run engineering:advise
@@ -287,7 +332,7 @@ npm run profile:show
 
 ## Large requirements
 
-For a large PRD/TRD, parse the whole product once, plan broadly at release and milestone level, detail only the next milestone, and execute only the active slice. Generate focused context packs under `delivery/context/<slice-id>/` rather than sending the whole product history to every agent.
+Parse the full product once, plan broadly at release and milestone level, detail only the next milestone, and execute only the active slice. Generate focused context packs under `delivery/context/<slice-id>/`.
 
 ```text
 Product → Release → Milestone → Epic → Vertical Slice → Superpowers Plan → Task
@@ -298,7 +343,7 @@ Product → Release → Milestone → Epic → Vertical Slice → Superpowers Pl
 1. Protect `main` and require pull requests.
 2. Require appropriate CI checks.
 3. Create a protected `production` environment with human reviewers.
-4. Store deployment and Codex Security credentials in GitHub secrets.
+4. Store deployment and security credentials in GitHub secrets.
 5. Enable Dependabot and secret scanning where available.
 6. Keep production release manually initiated and exact-SHA verified.
 
@@ -306,7 +351,7 @@ Product → Release → Milestone → Epic → Vertical Slice → Superpowers Pl
 
 No microservice generation, Kubernetes default, event sourcing default, generic repositories, uncontrolled agent swarms, autonomous merge, autonomous production deployment, custom project-management UI, or mandatory Ruflo dependency.
 
-Superpowers is the default execution methodology; Ruflo remains unnecessary unless future measured requirements justify a separate orchestration runtime.
+Superpowers is the default execution methodology. NotebookLM and Caveman are removable, non-authoritative, optional integrations.
 
 ## License
 
