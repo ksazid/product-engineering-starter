@@ -16,6 +16,7 @@
     "slice:status": "node scripts/slice.mjs status",
     "slice:validate": "node scripts/slice.mjs validate",
     "delivery:status": "node scripts/status.mjs",
+    "deployment:advise": "node scripts/deployment-advisor.mjs",
     "security:classify": "node scripts/security-classify.mjs",
     "knowledge:export": "node scripts/knowledge-export.mjs",
     "optimize:context": "node scripts/optimize-context.mjs",
