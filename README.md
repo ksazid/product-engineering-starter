@@ -13,6 +13,7 @@ Product Engineering Starter (PES) decides **what is approved and safe to build**
 - focused slice context, allowed paths, and protected paths
 - Loop Engineering-inspired state, budgets, gates, and run history
 - deterministic preflight, risk-triggered Codex Security, and certification evidence
+- optional provider-neutral deployment-cost guidance
 - human-controlled merge and exact-SHA production release
 
 ## What Superpowers provides
@@ -127,6 +128,7 @@ PRD + TRD
 → Superpowers plan, worktree, TDD, implementation, and review
 → deterministic preflight
 → risk-triggered security review
+→ optional deployment-cost recommendation
 → certification evidence
 → human merge and exact-SHA release
 ```
@@ -168,7 +170,7 @@ PES starts in **Lite** mode.
 - **Standard:** adds ADRs, threat modelling, evidence bundles, Superpowers worktrees/reviews, and release certification.
 - **Enterprise:** adds budgeted subagent-driven development, independent security review, and risk-triggered Codex Security.
 
-NotebookLM, MemPalace, and Caveman Lite are optional in every mode and disabled by default. They do not change the mode or authority model.
+NotebookLM, MemPalace, Caveman Lite, and deployment-cost guidance are optional in every mode and disabled by default. They do not change the mode or authority model.
 
 ```bash
 npm run profile:show
@@ -236,6 +238,37 @@ PES_CONTEXT_COMPRESSION_APPROVED=1 npm run optimize:context -- --apply
 
 The wrapper uses an explicit allowlist, creates backups, and excludes authoritative or public documents. Full guidance: `docs/integrations/CAVEMAN.md`.
 
+## Optional deployment-cost advisor
+
+PES includes provider-neutral decision guidance for Cloudflare, Netlify, Vercel, and Render. No provider is enabled by default, and the advisor never deploys anything.
+
+Review and edit:
+
+```text
+deployment/PROFILE.json
+```
+
+Then run:
+
+```bash
+npm run deployment:advise
+```
+
+The advisor ranks provider fit using workload characteristics such as frontend/backend runtime, project stage, commercial use, traffic, bandwidth, cold-start tolerance, preview deployments, edge execution, background jobs, regional constraints, and budget.
+
+The result is only a recommendation. Before selecting a provider, verify its current official pricing, quotas, egress, runtime compatibility, regional availability, commercial-use terms, backups, observability, security, and rollback support. Record a durable provider decision in an ADR.
+
+Current optional adapter identifiers:
+
+- `deploy-cloudflare`
+- `deploy-netlify`
+- `deploy-vercel`
+- `deploy-render`
+
+Provider-specific CLI tools and configuration should be added only after an approved slice selects the provider. Production deployment still requires certification, exact-SHA approval, a protected environment, and rollback readiness.
+
+Full guidance: `docs/integrations/DEPLOYMENT-COST.md`.
+
 ## Cost controls
 
 - deterministic validation before model-backed review
@@ -249,6 +282,8 @@ The wrapper uses an explicit allowlist, creates backups, and excludes authoritat
 - NotebookLM export only after material documentation changes
 - Caveman disabled by default and limited to `lite`
 - context compression only after measured recurring input cost and human approval
+- deployment providers compared by workload and total cost drivers, not headline free-tier price
+- no provider provisioning or deployment from the advisor
 
 ## Loop Engineering controls
 
@@ -315,6 +350,7 @@ npm run slice:status
 npm run slice:validate
 npm run security:classify -- <changed-files>
 npm run delivery:status
+npm run deployment:advise
 npm run knowledge:export
 npm run memory:doctor
 npm run optimize:context
@@ -343,9 +379,9 @@ Product → Release → Milestone → Epic → Vertical Slice → Context Retrie
 
 ## Deliberate exclusions
 
-No microservice generation, Kubernetes default, event sourcing default, generic repositories, uncontrolled agent swarms, autonomous merge, autonomous production deployment, custom project-management UI, or mandatory Ruflo dependency.
+No microservice generation, Kubernetes default, event sourcing default, generic repositories, uncontrolled agent swarms, autonomous merge, autonomous production deployment, custom project-management UI, mandatory deployment provider, or mandatory Ruflo dependency.
 
-Superpowers is the default execution methodology. NotebookLM, MemPalace, and Caveman are removable, non-authoritative, optional integrations.
+Superpowers is the default execution methodology. NotebookLM, MemPalace, Caveman, and deployment adapters are removable, non-authoritative, optional integrations.
 
 ## License
 
