@@ -38,6 +38,20 @@ Superpowers may provide feature-level brainstorming, writing plans, Git worktree
 - Use subagents only where quality, isolation, or parallelism justifies the additional model cost.
 - Repository preflight, security gates, certification, and human approval remain mandatory.
 
+## Optional knowledge and brevity integrations
+
+NotebookLM and Caveman are optional and disabled by default.
+
+- GitHub is always authoritative. NotebookLM is only a team-learning, onboarding, and explanatory Q&A layer.
+- Export NotebookLM sources only through `npm run knowledge:export`, review the generated bundle, and never include secrets, private customer data, restricted findings, or production logs.
+- Caveman should default to `lite` and be used only for routine summaries, CI triage, commit messages, and concise review comments.
+- Do not apply Caveman brevity to PRD/TRD analysis, ADR rationale, security findings, acceptance criteria, implementation plans, certification, or release evidence.
+- `npm run optimize:context` is preview-only by default. Applying compression requires explicit human approval, backups, diff review, and preflight.
+- Never compress PRDs, TRDs, ADRs, security policies, API contracts, release evidence, README files, source code, tests, or migrations.
+- A compressed instruction file must preserve authority order, policy meaning, commands, paths, identifiers, and stop conditions.
+
+See `docs/integrations/NOTEBOOKLM.md` and `docs/integrations/CAVEMAN.md`.
+
 ## UI defaults
 
 Apply only skills installed in the target project and load only those relevant to the active task.
