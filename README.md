@@ -14,11 +14,14 @@ Product Engineering Starter (PES) decides **what is approved and safe to build**
 - source-linked requirements and traceability
 - roadmaps, milestones, epics and vertical slices
 - architecture, design and security governance
+- typed approvals, structured decisions and governed lifecycle transitions
 - focused active-slice context and protected paths
+- risk-based impact, ownership, release, rollback and post-release contracts
 - Loop Engineering-inspired state, budgets, gates, run history and stop conditions
 - deterministic preflight, certification evidence and exact-SHA release controls
+- a generated read-only delivery dashboard with computed action notifications
 - optional memory, knowledge, brevity, deployment and delivery-graph integrations
-- human-controlled merge and production approval
+- human-controlled merge, release and production enablement
 
 ## Default web stack
 
@@ -75,21 +78,81 @@ PRD + TRD
 → product, technical and security intake
 → source-linked requirements
 → roadmap, milestones, epics and vertical slices
-→ human plan approval
+→ typed scope and policy decisions
+→ human plan and implementation approval
 → activate one vertical slice
 → focused context pack
 → Superpowers planning, TDD, implementation and review
 → deterministic preflight
 → risk-triggered security or delivery graph when justified
-→ certification evidence
-→ human merge and exact-SHA release
+→ exact-SHA certification approval
+→ release contract and rollback readiness
+→ human release and production-enable approval
+→ production verification
+→ post-release outcome review
 ```
 
 ```bash
 npm run slice:activate -- VS-01
 npm run slice:status
+npm run slice:transition -- implementing
 npm run slice:validate
 ```
+
+## End-to-end governance
+
+PES records independent approval types for scope, policy, implementation, certification, release and production enablement. It also records product decisions and the exact gates each unresolved decision blocks.
+
+The canonical lifecycle is:
+
+```text
+proposed
+→ discovery
+→ decision-pending
+→ approved
+→ ready-for-implementation
+→ implementing
+→ testing
+→ certification
+→ certified
+→ release-pending
+→ released
+→ observed
+→ validated
+```
+
+Exception states include `blocked`, `rejected`, `deferred`, `superseded` and `rolled-back`.
+
+Implementation permission is explicit:
+
+```text
+specification-only
+contracts-only
+runtime-disabled
+runtime-enabled
+production-enabled
+```
+
+Run the governance validator:
+
+```bash
+npm run governance:validate
+```
+
+See `docs/governance/END-TO-END.md`.
+
+## Delivery dashboard
+
+PES includes a static read-only dashboard generated from the authoritative delivery files. It shows slice lifecycle, gate progress, approvals, pending decisions, blockers, certification, releases, rollback history and computed notifications.
+
+```bash
+npm run dashboard:build
+npm run dashboard:serve
+```
+
+Open `http://127.0.0.1:4173`. GitHub Actions also uploads the generated dashboard as the `pes-dashboard` artifact.
+
+The dashboard deliberately has no database, authentication or editable approvals. Repository files remain authoritative.
 
 ## Operating modes
 
@@ -181,10 +244,11 @@ Guidance: `docs/integrations/DELIVERY-GRAPH.md`
 | Product and technical authority | Feature-level clarification |
 | Requirement IDs and traceability | Implementation planning |
 | Roadmap and vertical slices | Worktrees and execution |
+| Typed approvals and decisions | No approval authority |
 | Architecture and security policy | TDD and debugging |
 | Protected paths and human gates | Spec and code-quality review |
 | Preflight and certification | Branch completion workflow |
-| Merge and release approval | No release authority |
+| Release and production approval | No release authority |
 
 ## Optional integrations
 
@@ -264,10 +328,14 @@ Use deterministic secret scanning, dependency validation, authorization tests, s
 npm run product:intake
 npm run planning:generate
 npm run planning:validate
+npm run governance:validate
 npm run slice:activate -- VS-01
+npm run slice:transition -- <state>
 npm run slice:status
 npm run slice:validate
 npm run delivery:status
+npm run dashboard:build
+npm run dashboard:serve
 npm run delivery-graph:check
 npm run deployment:advise
 npm run security:classify -- <changed-files>
@@ -290,7 +358,7 @@ Product → Release → Milestone → Epic → Vertical Slice → Context Retrie
 
 ## Deliberate exclusions
 
-No Kubernetes default, microservice generation, event-sourcing default, generic repositories, uncontrolled agent swarms, autonomous merge, autonomous production deployment, custom project-management UI, mandatory hosting provider or mandatory Ruflo dependency.
+No Kubernetes default, microservice generation, event-sourcing default, generic repositories, uncontrolled agent swarms, autonomous merge, autonomous production deployment, general-purpose project-management system, mandatory hosting provider or mandatory Ruflo dependency.
 
 ## License
 
