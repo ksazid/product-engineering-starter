@@ -1,14 +1,26 @@
 {
-  "name": "product-engineering-starter",
+  "name": "product-engineering-starter-mobile",
   "version": "0.1.0",
   "private": false,
-  "description": "Governed open-source starter for building secure web products from an approved PRD and TRD.",
+  "description": "Governed open-source starter for building secure mobile products from an approved PRD and TRD.",
   "license": "MIT",
   "type": "module",
+  "packageManager": "npm@11",
   "engines": {
     "node": ">=22.13"
   },
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
+    "mobile:start": "npm --workspace @pes/mobile run start",
+    "mobile:android": "npm --workspace @pes/mobile run android",
+    "mobile:ios": "npm --workspace @pes/mobile run ios",
+    "mobile:web": "npm --workspace @pes/mobile run web",
+    "mobile:lint": "npm --workspace @pes/mobile run lint",
+    "mobile:typecheck": "npm --workspace @pes/mobile run typecheck",
+    "mobile:test": "npm --workspace @pes/mobile run test",
+    "mobile:doctor": "npm --workspace @pes/mobile run doctor",
     "product:intake": "node scripts/intake.mjs",
     "planning:generate": "node scripts/planning.mjs",
     "planning:validate": "node scripts/validate-json.mjs",
@@ -22,7 +34,7 @@
     "knowledge:export": "node scripts/knowledge-export.mjs",
     "optimize:context": "node scripts/optimize-context.mjs",
     "memory:doctor": "node scripts/memory-doctor.mjs",
-    "preflight": "npm run planning:validate && node --check scripts/*.mjs",
+    "preflight": "npm run planning:validate && node --check scripts/*.mjs && npm run mobile:typecheck && npm run mobile:lint && npm run mobile:test && npm run mobile:doctor",
     "certify": "npm run preflight",
     "engineering:advise": "node scripts/advisor.mjs",
     "profile:show": "node scripts/show-profile.mjs"
