@@ -10,6 +10,47 @@ function titleFromMarkdown(file,id) {
   const match = markdown.match(/^#\s+(.+)$/m);
   return match?.[1]?.trim() || id;
 }
+
+function pendingApproval(type) {
+  return {
+    type,
+    status:'pending',
+    version:null,
+    commitSha:null,
+    by:null,
+    at:null,
+    rationale:null
+  };
+}
+
+function freshSlice(id,file,title,governance) {
+  return {
+    schemaVersion:2,
+    sliceId:id,
+    title,
+    status:'active',
+    lifecycle:'approved',
+    riskLevel:'low',
+    implementationMode:'specification-only',
+    requirements:[],
+    owners:{product:null,engineering:null,operations:null,security:null},
+    dependencies:[],
+    blockers:[],
+    allowedPaths:[],
+    protectedPaths:['.github/workflows/release.yml'],
+    impact:{areas:[],notes:[]},
+    approvals:governance.approvalTypes.map(pendingApproval),
+    decisionIds:[],
+    progress:{discovery:0,decisions:0,implementation:0,testing:0,certification:0,release:0,validation:0},
+    certification:{status:'not-started',commitSha:null,evidence:[]},
+    release:{status:'not-authorized',releaseId:null},
+    rollback:{status:'not-applicable',rollbackId:null},
+    postRelease:{status:'not-started',reviewAt:null,expectedOutcome:null,metrics:[]},
+    links:{specification:file,implementationPr:null,evidence:[]},
+    maxAttempts:3
+  };
+}
+
 function ensureValid() {
   const result = validateDelivery(loadDelivery());
   if (result.errors.length) fail(result.errors.map(error => `- ${error}`).join('\n'));
@@ -29,19 +70,21 @@ if (action === 'activate') {
   if (!id || !/^VS-\d+$/.test(id)) fail('Usage: slice activate VS-01');
   const file = `docs/slices/${id}.md`;
   if (!fs.existsSync(file)) fail(`${file} does not exist`);
-  const current = json(currentPath);
+  const delivery = loadDelivery();
+  const current = delivery.current;
   if (current.sliceId && current.status === 'active' && current.sliceId !== id) fail(`${current.sliceId} is already active`);
-  Object.assign(current,{
-    schemaVersion:2,
-    sliceId:id,
-    title:titleFromMarkdown(file,id),
-    status:'active',
-    lifecycle:current.sliceId === id ? current.lifecycle : 'approved',
-    implementationMode:current.sliceId === id ? current.implementationMode : 'specification-only',
-    links:{...(current.links ?? {}),specification:file}
-  });
-  writeJson(currentPath,current);
-  console.log(`${id} activated at approved/specification-only. Record typed approvals before runtime implementation.`);
+
+  if (current.sliceId === id) {
+    current.status = 'active';
+    current.links = {...(current.links ?? {}),specification:file};
+    writeJson(currentPath,current);
+    console.log(`${id} reactivated without changing its existing governance state.`);
+    process.exit(0);
+  }
+
+  const next = freshSlice(id,file,titleFromMarkdown(file,id),delivery.governance);
+  writeJson(currentPath,next);
+  console.log(`${id} activated with fresh governance state at approved/specification-only. Add requirement IDs and record typed approvals before runtime implementation.`);
   process.exit(0);
 }
 
